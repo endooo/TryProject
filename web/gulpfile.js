@@ -1,6 +1,7 @@
 var gulp = require('gulp'),
     sass = require('gulp-ruby-sass')
     notify = require("gulp-notify")
+    autoprefix = require("gulp-autoprefixer")
     bower = require('gulp-bower');
 
 var config = {
@@ -19,6 +20,11 @@ gulp.task('icons', function() {
                .pipe(gulp.dest('./public/fonts'));
 });
 
+gulp.task('javascript', function() {
+    return gulp.src(config.bowerDir + '/bootstrap-sass-official/assets/javascripts/**.*')
+               .pipe(gulp.dest('./public/javascripts'));
+});
+
 gulp.task('css', function() {
     return sass(config.sassPath + '/style.scss', {
         style: 'compressed',
@@ -31,6 +37,7 @@ gulp.task('css', function() {
     .on("error", notify.onError(function (error) {
         return "Error: " + error.message;
     }))
+    .pipe(autoprefix('last 2 version'))
     .pipe(gulp.dest('./public/css'));
 });
 
@@ -39,4 +46,4 @@ gulp.task('watch', function() {
     gulp.watch(config.sassPath + '/**/*.scss', ['css']);
 });
 
-gulp.task('default', ['bower', 'icons', 'css']);
+gulp.task('default', ['bower', 'icons', 'css', 'javascript']);
